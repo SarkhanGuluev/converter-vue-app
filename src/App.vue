@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <h1 class="typing">Конвертация валют.</h1>
+    <h1 class="typing">Конвертер валют.</h1>
     <div>
       <input v-model="from" @keypress="getValue"/>
       <v-select @select="selectFrom"/>
@@ -88,16 +88,6 @@ input {
   padding-left: 1em;
   border-radius: .25em;
   border: none;
-}
-
-button {
-  font-size: 1em;
-  background: #2c3e50;
-  width: 10em;
-  height: 2em;
-  border: none;
-  color: #fff;
-  text-transform: uppercase;
 }
 
 h1 {
