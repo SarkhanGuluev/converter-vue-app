@@ -1,22 +1,27 @@
 <template>
     <div class="select">
-        <select v-model="selected">
-            <!-- <option disabled> Выберити валюту </option> -->
-            <option v-for="(currency, index) in currencies" :key='index'>
+        <select 
+            v-model="key"
+            @change="selectCurrency()"
+        >
+            <option disabled selected value=''> Выберити валюту </option>
+            <option 
+                v-for="(currency, index) in currencies" 
+                :key='index'
+                :value='currency.id'
+            >
                 {{currency.currencyName}}
             </option>
         </select>
-        <h1>{{selected}}</h1>
     </div>
 </template>
 
 <script>
 export default {
     name: 'Select',
-    props: ['flag'],
     data() {
         return {
-            selected: 'AZN'
+            key: ''
         }
     },
     computed: {
@@ -24,16 +29,11 @@ export default {
         return this.$store.getters.getCurrencies
       }
     },
-    // methods: {
-    //     addValue() {
-    //         if(this.flag === 'from'){
-    //             this.$store.commit('addFrom', this.selected)
-    //         }
-    //         if(this.flag === 'to'){
-    //             this.$store.commit('addTo', this.selected)
-    //         }
-    //     }
-    // }
+    methods: {
+        selectCurrency() {
+            this.$emit('select', this.key)
+        }
+    }
 }
 </script>
 
@@ -48,6 +48,7 @@ export default {
     border: 0 !important;
     background: #2c3e50;
     background-image: none;
+    font-size: 1em;
 }
 
 select::-ms-expand {

@@ -1,9 +1,14 @@
 <template>
   <div class="app">
     <h1 class="typing">Конвертация валют.</h1>
-    <v-select flag='from' />
-    <v-select flag='to' />
-    {{log()}}
+    <div>
+      <input v-model="from" @keypress="getValue"/>
+      <v-select @select="selectFrom"/>
+    </div>
+  <div>
+    <input :value='convert'>
+    <v-select @select="selectTo"/>
+  </div>
   </div>
 </template>
 
@@ -13,16 +18,40 @@ import VSelect from './components/v-select.vue'
 export default {
   name: 'App',
   components: {VSelect},
+  data: () => ({
+    currencyFrom: '',
+    currencyTo: '',
+    from: 0,
+    value: 0
+  }),
   mounted() {
     this.$http.get('https://free.currconv.com/api/v7/currencies?apiKey=64c82308f008cf1e3a2d')
       .then(res => this.$store.commit('addCurrencies', res.data.results))
   },  
-    methods: {
-        log() { console.log(this.$store.getFrom) },
-        currencyFrom(event) {
-          this.from = event.target
-        }
+  methods: {
+    selectFrom(option) {
+      this.currencyFrom = option
+    },
+    selectTo(option) {
+      this.currencyTo = option
+    },
+    async getValue() {
+      if(this.currencyFrom && this.currencyTo){
+        const res = await this.$http.get(`https://free.currconv.com/api/v7/convert?q=${this.currencyFrom}_${this.currencyTo}&compact=ultra&apiKey=64c82308f008cf1e3a2d`)
+        this.value = res.data[`${this.currencyFrom}_${this.currencyTo}`]
+      }
+      console.log(this.value);
     }
+  },
+  computed: {
+    convert() {
+      if(this.currencyTo){
+        return this.from * this.value
+      } else {
+        return 0
+      }
+    }
+  }
 }
 </script>
 
@@ -42,11 +71,36 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 1rem
+  gap: 1rem;
+  font-family: 'Inconsolata', Consolas, monospace;
+}
+
+.app > div {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+input {
+  font-size: 1.5em;
+  background: #2c3e50;
+  color: #fff;
+  padding-left: 1em;
+  border-radius: .25em;
+  border: none;
+}
+
+button {
+  font-size: 1em;
+  background: #2c3e50;
+  width: 10em;
+  height: 2em;
+  border: none;
+  color: #fff;
+  text-transform: uppercase;
 }
 
 h1 {
-  font-family: 'Inconsolata', Consolas, monospace;
 	font-size: 4em;
 	color: #d7b94c;
 }
@@ -62,8 +116,7 @@ h1 {
     width: 100%;
     color: white;
     background: #1d1f20;;
-    animation: typing 4s steps(18) forwards,
-      caret 1s infinite;
+    animation: typing 4s steps(18) forwards, caret 1s infinite;
 }
 
 @keyframes typing {
