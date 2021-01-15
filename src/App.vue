@@ -106,7 +106,7 @@ h1 {
     width: 100%;
     color: white;
     background: #1d1f20;;
-    animation: typing 4s steps(18) forwards, caret 1s infinite;
+    animation: typing 4s steps(16) forwards, caret 1s infinite;
 }
 
 @keyframes typing {

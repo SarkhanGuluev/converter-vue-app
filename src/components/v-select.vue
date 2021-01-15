@@ -4,7 +4,7 @@
             v-model="key"
             @change="selectCurrency()"
         >
-            <option disabled selected value=''> Выберити валюту </option>
+            <option disabled selected value=''> Выберитe валюту </option>
             <option 
                 v-for="(currency, index) in currencies" 
                 :key='index'
